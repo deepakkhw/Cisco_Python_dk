@@ -24,8 +24,8 @@ for ip in f:
       tn = telnetlib.Telnet(HOST)
       print("trying to connect a host" + " "  +HOST)
    except:
-      print("Error to connect" + " " +HOST)
-      #If Telnet failed to device due to some reason then show error and continue to next hop
+       print("\x1b[0;31;40m" + "Error to connect"  + " " +HOST + "\x1b[0m")
+      #If Telnet failed to device due to some reason then show error and continue to next hop and This Print will be highlite. 
       continue
 
    tn.read_until(b"Username: ")
