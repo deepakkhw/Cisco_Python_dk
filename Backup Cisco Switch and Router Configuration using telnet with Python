@@ -1,0 +1,46 @@
+import sys
+import getpass
+import telnetlib
+import time
+from datetime import date
+
+
+def get_filename_datetime():
+    # Use current date to get a text file name.
+    return str(date.today())
+
+fname = get_filename_datetime()
+
+user = input("Enter your remote  telnet account: ")
+password = getpass.getpass()
+
+f = open("switchlist.txt")
+# Switchlist.txt file where Switches and Routes IP or Host is saved. 
+
+for ip in f:
+   HOST = ip.strip()
+   #Removed Space of any at the end of IP address.
+   try:
+      tn = telnetlib.Telnet(HOST)
+      print("trying to connect a host" + " "  +HOST)
+   except:
+      print("Error to connect" + " " +HOST)
+      #If Telnet failed to device due to some reason then show error and continue to next hop
+      continue
+
+   tn.read_until(b"Username: ")
+   tn.write(user.encode('ascii') + b"\n")
+   if password:
+       tn.read_until(b"Password: ")
+       tn.write(password.encode('ascii') + b"\n")
+
+   print("Connected Successfully to " + " "  +HOST)
+   tn.write(b"terminal len 0\n")
+   tn.write(b"show run\n")
+   tn.write(b"exit\n")
+
+   backupread=tn.read_all().decode('ascii')
+   saveoutput=open("backup" + " " +HOST + " " +fname + ".txt", "w")
+   saveoutput.write(backupread)
+   saveoutput.close()
+
