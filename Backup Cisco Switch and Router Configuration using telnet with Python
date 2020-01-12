@@ -17,15 +17,19 @@ user = input("Enter your remote  telnet account: ")
 password = getpass.getpass()
 
 with  open("switchlist.txt") as file:
-
+#f = open("switchlist.txt")
+    #f = file.read()
+   #print(f)
 
    for ip in file:
        HOST = ip.strip()
-       #Removed Space of any at the end of IP address.
+       #print(HOST)
+   #Removed Space of any at the end of IP address.
        try:
             tn = telnetlib.Telnet(HOST)
-             except:
-            print("\x1b[0;31;40m" + "Error to connect"  + " " +HOST + "\x1b[0m")
+      #print("trying to connect a host" + " "  +HOST)
+       except:
+            print("\x1b[0;31;40m" + "Error to connect"  + " " +HOST +"\x1b[0m")
       #If Telnet failed to device due to some reason then show error and continue to next hop this Error will be highlighted.
             continue
 
@@ -34,15 +38,19 @@ with  open("switchlist.txt") as file:
        if password:
            tn.read_until(b"Password: ")
            tn.write(password.encode('ascii') + b"\n")
-
-       print("Login into the device and trying for backup on " + " "  +HOST)
-       tn.write(b"terminal len 0\n")
-       tn.write(b"show run\n")
-       tn.write(b"exit\n")
+           tn.write(b'\r') 
+       n, match, previous_text = tn.expect([br'Login invalid', br'\$'], 10)
+       if n == 0:
+           print("Username and password failed - giving up" + " "  +HOST)
+       else:
+          print("Login into the device and trying for backup on " + " "  +HOST)
+          tn.write(b"terminal len 0\n")
+          tn.write(b"show run\n")
+          tn.write(b"exit\n")
        
 
-       backupread=tn.read_all().decode('ascii')
-       saveoutput=open("backup" + " " +HOST + " " +fname + ".txt", "w")
-       saveoutput.write(backupread)
-       saveoutput.close()
-       print(" Backup Successfully " + " "  +HOST)
+          backupread=tn.read_all().decode('ascii')
+          saveoutput=open("backup" + " " +HOST + " " +fname + ".txt", "w")
+          saveoutput.write(backupread)
+          saveoutput.close()
+          print(" Backup Successfully " + " "  +HOST)
