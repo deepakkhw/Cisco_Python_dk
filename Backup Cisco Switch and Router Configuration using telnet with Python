@@ -3,12 +3,13 @@ import getpass
 import telnetlib
 import time
 from datetime import date
+from datetime import datetime
 import os
 
 
 def get_filename_datetime():
-    # Use current date to get a text file name.
-    return str(date.today())
+    # Use current date & time to get a text file name.
+    return str(datetime.now().strftime('%Y_%m_%d %H_%M_%S'))
 
 # Get full path for writing.
 fname = get_filename_datetime()
