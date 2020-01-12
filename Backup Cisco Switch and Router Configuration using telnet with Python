@@ -18,13 +18,10 @@ user = input("Enter your remote  telnet account: ")
 password = getpass.getpass()
 
 with  open("switchlist.txt") as file:
-#f = open("switchlist.txt")
-    #f = file.read()
-   #print(f)
 
    for ip in file:
        HOST = ip.strip()
-       #print(HOST)
+       
    #Removed Space of any at the end of IP address.
        try:
             tn = telnetlib.Telnet(HOST)
