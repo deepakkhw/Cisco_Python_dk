@@ -1,0 +1,30 @@
+#You can watch full video here - https://youtu.be/hKaUCKI8pAQ
+Script is here:
+
+import telnetlib
+import sys
+
+hostname = input("Please enter Device IP or Hostname: ")
+username = "admin"
+password = "admin"
+
+try:
+    tn = telnetlib.Telnet(hostname)
+    print("trying to login in " + hostname)
+except:
+    print("Soemthing wrong with host " + hostname + " Please verify IP or Device")
+    continue
+tn.read_until(b"Username: ")
+tn.write(username.encode() + b"\n")
+if password:
+    tn.read_until(b"Password: ")
+    tn.write(password.encode() + b"\n")
+    tn.write(b"\n")
+
+tn.write(b"show vlan br \n")
+tn.write(b"sho ip inter br \n")
+tn.write(b"exit\n")
+
+read_tn_all = tn.read_all()
+read_tn = read_tn_all.decode()
+print(read_tn)
